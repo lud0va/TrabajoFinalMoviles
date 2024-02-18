@@ -1,0 +1,6 @@
+query getAllTablesByCustomer($idCust: Int!) {
+    getAllTablesByCustomer(idCust: $idCust) {
+        id
+        numberOfSeats
+    }
+}

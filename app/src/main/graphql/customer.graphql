@@ -1,0 +1,17 @@
+query getCustomer($id: Int!) {
+    getCustomer(id: $id) {
+        id
+        firstName
+        lastName
+        email
+        phone
+        dateOfBirth
+        orders {
+            orderId
+        }
+        tables {
+            numberOfSeats
+            id
+        }
+    }
+}

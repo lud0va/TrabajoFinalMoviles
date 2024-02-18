@@ -1,0 +1,6 @@
+query getAllOrders{
+    getAllOrders {
+        orderId
+        orderDate
+    }
+}

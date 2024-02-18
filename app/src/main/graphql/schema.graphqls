@@ -1,0 +1,78 @@
+scalar Date
+
+type Customer {
+    id: Int!
+    firstName: String!
+    lastName: String!
+    email: String!
+    phone: String!
+    dateOfBirth: String!
+    orders: [Orders]
+    tables: [RestaurantTables]
+}
+
+
+type RestaurantTables {
+    id: Int!
+    numberOfSeats: Int
+    orders: [Customer]
+}
+
+type OrderItems {
+    orderItemId: Int!
+
+    name: String
+    price: Float
+    quantity: Int
+    order: Orders
+}
+type Command{
+    id: Int
+    commandName: String
+    customerId: Int
+}
+
+type Orders {
+    orderId: Int!
+    orderDate: String
+    customer: Customer
+    orderItems: [OrderItems]
+
+}
+
+type Mutation {
+    addCustomer(input:CustomerInput):Customer!
+    addOrderItem(input:OrderItemsInput):OrderItems!
+    deleteOrder(idOrder:Int):Boolean!
+}
+
+type Query{
+    getCommandsByCustomer(idCust:Int):[Command]
+    getAllOrders:[Orders!]!
+    getAllTablesByCustomer(idCust:Int):[RestaurantTables]
+    getCustomers:[Customer!]!
+    getOrderItemsByOrder(id:Int):[OrderItems]
+    getOrderItemsByItem(idItem:Int):OrderItems!
+    getOrdersDeCust(idCust:Int):[Orders]
+    getOrder(id:Int):Orders!
+    getCustomer(id:Int):Customer!
+}
+input CustomerInput{
+    id:Int
+    firstName:String
+    lastName:String
+    email:String
+    phone:String
+    dateOfBirth:Date
+}
+input OrderInput{
+    orderId:Int
+}
+
+input OrderItemsInput{
+    orderItemId:Int
+    name:  String
+    price: Float
+    quantity: Int
+    orderId:Int
+}

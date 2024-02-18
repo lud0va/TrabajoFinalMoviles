@@ -1,0 +1,10 @@
+query getOrderItemsByItem($idItem: Int!) {
+    getOrderItemsByItem(idItem: $idItem) {
+        orderItemId
+        name
+        price
+        quantity
+
+    }
+
+}

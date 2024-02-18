@@ -1,0 +1,4 @@
+
+nkotlin:S101"PRename class "loginContract" to match the regular expression ^[A-Z][a-zA-Z0-9]*$(›­ßë8İ»Ò½Û1
+fkotlin:S101"HRename class "login" to match the regular expression ^[A-Z][a-zA-Z0-9]*$(œÑ·8ÏÑÂ½Û1
+nkotlin:S101"KRename class "register" to match the regular expression ^[A-Z][a-zA-Z0-9]*$(äĞíÂûÿÿÿÿ8ĞÑÂ½Û1

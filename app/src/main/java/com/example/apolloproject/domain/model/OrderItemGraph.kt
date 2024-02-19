@@ -5,7 +5,7 @@ data class OrderItemGraph(
     val name:String,
     val price:Double,
     val quantity:Int,
-    val orderId:Int?
+    val orderId:Int
 
 
 

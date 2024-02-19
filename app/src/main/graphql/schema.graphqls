@@ -14,27 +14,27 @@ type Customer {
 
 type RestaurantTables {
     id: Int!
-    numberOfSeats: Int
+    numberOfSeats: Int!
     orders: [Customer]
 }
 
 type OrderItems {
     orderItemId: Int!
 
-    name: String
-    price: Float
-    quantity: Int
+    name: String!
+    price: Float!
+    quantity: Int!
     order: Orders
 }
 type Command{
-    id: Int
-    commandName: String
+    id: Int!
+    commandName: String!
     customerId: Int
 }
 
 type Orders {
     orderId: Int!
-    orderDate: String
+    orderDate: String!
     customer: Customer
     orderItems: [OrderItems]
 
@@ -47,32 +47,32 @@ type Mutation {
 }
 
 type Query{
-    getCommandsByCustomer(idCust:Int):[Command]
+    getCommandsByCustomer(idCust:Int):[Command!]
     getAllOrders:[Orders!]!
-    getAllTablesByCustomer(idCust:Int):[RestaurantTables]
+    getAllTablesByCustomer(idCust:Int):[RestaurantTables!]
     getCustomers:[Customer!]!
-    getOrderItemsByOrder(id:Int):[OrderItems]
+    getOrderItemsByOrder(id:Int):[OrderItems!]
     getOrderItemsByItem(idItem:Int):OrderItems!
-    getOrdersDeCust(idCust:Int):[Orders]
+    getOrdersDeCust(idCust:Int):[Orders!]!
     getOrder(id:Int):Orders!
     getCustomer(id:Int):Customer!
 }
 input CustomerInput{
-    id:Int
-    firstName:String
-    lastName:String
-    email:String
-    phone:String
-    dateOfBirth:Date
+
+    firstName:String!
+    lastName:String!
+    email:String!
+    phone:String!
+    dateOfBirth:Date!
 }
 input OrderInput{
     orderId:Int
 }
 
 input OrderItemsInput{
-    orderItemId:Int
-    name:  String
-    price: Float
-    quantity: Int
-    orderId:Int
+
+    name:  String!
+    price: Float!
+    quantity: Int!
+    orderId:Int!
 }

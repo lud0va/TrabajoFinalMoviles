@@ -32,11 +32,10 @@ fun OrdersDetalle(
     orderId: Int,
     viewModel: OrdersViewModel = hiltViewModel(),
 
-    )
-{
+    ) {
     val state = viewModel.uiState.collectAsState()
-    // cargar el id en elState
-    //para get TABLES AND COMMANDS   viewModel.handleEvent(PantallaListaEvent.GetPersonas)
+    viewModel.event(OrdersDetalleContract.Event.GetOrder(orderId))
+    viewModel.event(OrdersDetalleContract.Event.GetOrderItems(orderId))
 
     Box(
         Modifier
@@ -60,26 +59,22 @@ fun ContenidoOrderPantalla(
     viewModel: OrdersViewModel? = null,
     align: Modifier,
 
-    ){
+    ) {
     Column(modifier = align) {
         idOrder(state, viewModel)
         Spacer(modifier = Modifier.padding(16.dp))
         dateOrder(state, viewModel)
+        Spacer(modifier = Modifier.padding(16.dp))
+        ListaTables(
+            state = state,
 
-
-
-
-            ListaTables(
-                state = state,
-
-                )
+            )
 
 
     }
 
 
 }
-
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -133,14 +128,13 @@ fun dateOrder(state: OrdersDetalleContract.State, viewModel: OrdersViewModel?) {
 }
 
 
-
 @Composable
-fun   OrderItem(
+fun OrderItem(
     orderItem: OrderItemGraph,
 
     modifier: Modifier = Modifier
 
-){
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()

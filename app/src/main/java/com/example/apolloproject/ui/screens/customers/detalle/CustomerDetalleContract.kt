@@ -10,7 +10,6 @@ interface CustomerDetalleContract {
     sealed class Event(){
         class GetCustomer(val customerId:Int):Event()
         class GetTables(val customerId:Int):Event()
-        class GetCommands(val customerId:Int):Event()
     }
     data class State(
         val  customer:CustomerGraphDetail?=null,

@@ -25,8 +25,8 @@ fun navigationAct() {
             "customersList"
         ){
             CustomersLista(
-                onViewDetalle = {int ->
-                    navController.navigate("detalleCust/${int}")
+                onViewDetalle = {customerId ->
+                    navController.navigate("detalleCust/${customerId}")
                 },
                 bottomNavigationBar =  {
                     BottomBar(
@@ -41,20 +41,20 @@ fun navigationAct() {
             arguments = listOf(
                 navArgument(name = "customerId") {
                     type = NavType.IntType
-                    defaultValue = ""
+                    defaultValue = 0
                 }
             )
         ){
             CustomerDetalle(
-                customerId=it.arguments?.getInt("customerId")?:0,
+                customerId=it.arguments?.getInt("customerId") ?: 0,
             )
         }
         composable(
             "ordersList"
         ){
             OrdersLista(
-                onViewDetalle = {int ->
-                    navController.navigate("detalleOrder/${int}")
+                onViewDetalle = {orderId ->
+                    navController.navigate("detalleOrder/${orderId}")
                 },
                 bottomNavigationBar =  {
                     BottomBar(
@@ -68,7 +68,7 @@ fun navigationAct() {
             arguments = listOf(
                 navArgument(name = "orderId") {
                     type = NavType.IntType
-                    defaultValue = ""
+                    defaultValue = 0
                 }
             )
         ){

@@ -16,7 +16,7 @@ interface CredentialApi {
     suspend fun register(@Query("username") username:String, @Query("password") password:String ):Response<Boolean>
 
     @GET("/getAccessToken")
-    suspend fun getAccesToken(@Query("refreshtoken") username:String ):Response<String>
+    suspend fun getAccesToken(@Query("refreshtoken") refreshTokenn:String ):Response<String>
 
 
 }

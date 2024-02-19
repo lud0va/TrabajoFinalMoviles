@@ -1,5 +1,6 @@
 package com.example.apolloproject.data.retrofit
 
+import com.example.apolloproject.common.ConstantesServer
 import com.example.apolloproject.data.retrofit.calls.CredentialApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -27,6 +28,8 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+
+
 @Module
 @InstallIn(SingletonComponent::class)
 class ConfiguracionRetrofit {
@@ -50,7 +53,7 @@ class ConfiguracionRetrofit {
     @Provides
     fun retrofits(gson: Gson, clientOK: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.37.1:8080")
+            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientOK)
             .build()

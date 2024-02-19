@@ -37,7 +37,7 @@ fun CustomersLista(
 ) {
     val state = viewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        //para get customers   viewModel.handleEvent(PantallaListaEvent.GetPersonas)
+   viewModel.event(CustomerListContract.Event.getCustomers)
     }
 
     ListaCust(
@@ -105,6 +105,11 @@ fun CustomerItem(
     .padding(8.dp)
     .clickable { onViewDetalle(customer.id) } ) {
     Row( modifier = Modifier.padding(8.dp)){
+        Text(
+            modifier = Modifier.weight(weight = 0.4F),
+            text = customer.id.toString()
+
+        )
         Text(
             modifier = Modifier.weight(weight = 0.4F),
             text = customer.firstName

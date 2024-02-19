@@ -8,6 +8,7 @@ import com.example.apolloproject.domain.model.TablesGraph
 
 interface OrdersDetalleContract {
     sealed class Event(){
+
         class GetOrder(val orderId:Int):Event()
         class GetOrderItems(val orderId:Int):Event()
     }

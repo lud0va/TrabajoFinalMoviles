@@ -11,5 +11,6 @@ interface CustomerClient {
     suspend fun getCustomer(id:Int):CustomerGraphDetail?
 
     suspend fun getCustomers(): List<CustomerGraph>
+    suspend fun addCustomer(input: CustomerGraphDetail): CustomerGraph?
 
 }

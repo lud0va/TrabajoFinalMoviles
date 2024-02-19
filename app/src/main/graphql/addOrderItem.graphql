@@ -1,5 +1,6 @@
 mutation addOrderItem($input: OrderItemsInput!){
     addOrderItem(input: $input){
+        orderItemId
         name
         price
         quantity

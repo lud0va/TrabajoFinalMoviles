@@ -26,10 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.apolloproject.domain.model.OrderGraph
-import com.example.apolloproject.ui.screens.customers.CustomerItem
-import com.example.apolloproject.ui.screens.customers.CustomerListContract
-import com.example.apolloproject.ui.screens.customers.CustomersListViewModel
-import com.example.apolloproject.ui.screens.customers.ListaCust
 
 @Composable
 fun OrdersLista(
@@ -39,7 +35,7 @@ fun OrdersLista(
 ) {
     val state = viewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        //para get customers   viewModel.handleEvent(PantallaListaEvent.GetPersonas)
+         viewModel.event(OrdersListaContract.Event.GetOrders)
     }
 
     OrdersList(
@@ -104,7 +100,7 @@ fun OrderItem(
     Card(modifier = modifier
     .fillMaxWidth()
     .padding(8.dp)
-    .clickable { onViewDetalle(order.orderId) } ) {
+    .clickable { onViewDetalle(order.orderId.toInt()) } ) {
     Row( modifier = Modifier.padding(8.dp)){
         Text(
             modifier = Modifier.weight(weight = 0.4F),

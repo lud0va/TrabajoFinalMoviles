@@ -43,8 +43,8 @@ fun CustomerDetalle(
     viewModel: CustomerDetalleViewModel = hiltViewModel(),
 ) {
     val state = viewModel.uiState.collectAsState()
-     // cargar el id en elState
-    //para get TABLES AND COMMANDS   viewModel.handleEvent(PantallaListaEvent.GetPersonas)
+    viewModel.event(CustomerDetalleContract.Event.GetCustomer(customerId))
+    viewModel.event(CustomerDetalleContract.Event.GetTables(customerId))
 
     Box(
         Modifier
@@ -83,53 +83,15 @@ fun ContenidoCustPantalla(
         phoneCust(state, viewModel)
         Spacer(modifier = Modifier.padding(6.dp))
         dateOfBirth(state, viewModel)
+        Spacer(modifier = Modifier.padding(6.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Text(text = "table list")
+        Spacer(modifier = Modifier.padding(6.dp))
+        ListaTables(
+            state = state,
 
-            ListaTables(
-                state = state,
-
-                )
-            ListaCommands(
-                state = state
             )
-        }
-    }
 
-
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun ListaCommands(
-    state: CustomerDetalleContract.State
-
-) {
-    Scaffold() { innerPadding ->
-
-
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(Color.Gray)
-        ) {
-
-            items(items = state.commands, key = { command -> command.id }) { command ->
-                CommandItem(
-                    command = command,
-
-                    modifier = Modifier.animateItemPlacement(
-                        animationSpec = tween(1000)
-                    )
-                )
-            }
-        }
     }
 
 
@@ -137,7 +99,6 @@ fun ListaCommands(
 
 
 @OptIn(ExperimentalFoundationApi::class)
-
 @Composable
 fun ListaTables(
     state: CustomerDetalleContract.State,
@@ -252,12 +213,12 @@ fun dateOfBirth(state: CustomerDetalleContract.State, viewModel: CustomerDetalle
 }
 
 @Composable
-fun   TableItem(
+fun TableItem(
     table: TablesGraph,
 
     modifier: Modifier = Modifier
 
-){
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -279,32 +240,4 @@ fun   TableItem(
     }
 
 }
-@Composable
-fun CommandItem(
-    command: CommandGraph,
 
-    modifier: Modifier = Modifier
-
-) {
-
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Text(
-                modifier = Modifier.weight(weight = 0.4F),
-                text = command.id.toString()
-
-            )
-            Text(
-                modifier = Modifier.weight(0.4F),
-                text = command.commandName
-
-            )
-
-        }
-    }
-
-}

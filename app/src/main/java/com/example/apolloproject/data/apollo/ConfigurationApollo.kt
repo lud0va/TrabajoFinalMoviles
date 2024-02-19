@@ -1,6 +1,8 @@
 package com.example.apolloproject.data.apollo
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
 import com.example.apolloproject.data.retrofit.CacheAuthorization

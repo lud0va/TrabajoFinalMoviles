@@ -112,7 +112,7 @@ dependencies {
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 //posiblemente hay que eliminarla, la agrego androidstudio porque salio en rojo el datastore cuando volvi a abrir el proyecto
-    implementation("androidx.datastore:datastore-core:1.0.0")
+
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")

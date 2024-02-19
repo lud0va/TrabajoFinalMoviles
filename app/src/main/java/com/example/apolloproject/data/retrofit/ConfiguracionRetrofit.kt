@@ -1,7 +1,6 @@
 package com.example.apolloproject.data.retrofit
 
 import com.example.apolloproject.data.retrofit.calls.CredentialApi
-import com.example.exammoviles.ui.ServiceInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
@@ -31,17 +30,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class ConfiguracionRetrofit {
-    @Singleton
-    @Provides
-    fun provideInterceptor(): AuthorizationInterceptor {
-        val cacheAuthorization = CacheAuthorization()
-        val interceptor = AuthorizationInterceptor(cacheAuthorization)
-        return interceptor
-    }
+
 
     @Singleton
     @Provides
-    fun getOkHttpClient(authorizationInterceptor: AuthorizationInterceptor): OkHttpClient {
+    fun getOkHttpClient(): OkHttpClient {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
 
@@ -49,7 +42,6 @@ class ConfiguracionRetrofit {
             .readTimeout(Duration.of(10, ChronoUnit.MINUTES))
             .callTimeout(Duration.of(10, ChronoUnit.MINUTES))
             .connectTimeout(Duration.of(10, ChronoUnit.MINUTES))
-            .addInterceptor(authorizationInterceptor)
             .connectionPool(ConnectionPool(1, 1, TimeUnit.SECONDS)) // necesario para la sesion
             .build()
     }
@@ -58,7 +50,7 @@ class ConfiguracionRetrofit {
     @Provides
     fun retrofits(gson: Gson, clientOK: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.24:8080")
+            .baseUrl("http://192.168.37.1:8080")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientOK)
             .build()

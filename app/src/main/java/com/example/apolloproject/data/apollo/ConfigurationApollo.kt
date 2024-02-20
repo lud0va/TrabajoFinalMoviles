@@ -47,7 +47,7 @@ class ConfigurationApollo {
     @Singleton
     fun createApolloClient(authenticationInterceptor: AuthenticationInterceptor): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(ConstantesServer.IPSERVIDORGRAPH + ConstantesServer.PATHGRAPHQL)
+            .serverUrl(ConstantesServer.IPSERVIDORGRAPHCLASE + ConstantesServer.PATHGRAPHQL)
             .okHttpClient(
                 OkHttpClient.Builder()
                     .addInterceptor(authenticationInterceptor)

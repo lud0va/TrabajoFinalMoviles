@@ -77,7 +77,7 @@ class AuthenticationInterceptor @Inject constructor(private val dataStoreTokens:
         val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
+            .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()

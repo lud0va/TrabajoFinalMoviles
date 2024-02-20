@@ -1,7 +1,5 @@
 package com.example.apolloproject.ui.screens.customers.detalle
 
-import com.example.apolloproject.domain.model.CommandGraph
-import com.example.apolloproject.domain.model.CustomerGraph
 import com.example.apolloproject.domain.model.CustomerGraphDetail
 import com.example.apolloproject.domain.model.TablesGraph
 
@@ -14,8 +12,9 @@ interface CustomerDetalleContract {
     data class State(
         val  customer:CustomerGraphDetail?=null,
         val tables:List<TablesGraph> = emptyList(),
-        val commands:List<CommandGraph> = emptyList()
+        val  error:String?=null,
 
+        val isLoading:Boolean=false,
 
     )
 }

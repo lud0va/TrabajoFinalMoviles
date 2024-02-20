@@ -9,8 +9,10 @@ import androidx.navigation.navArgument
 import com.example.apolloproject.ui.common.BottomBar
 import com.example.apolloproject.ui.screens.customers.CustomersLista
 import com.example.apolloproject.ui.screens.customers.detalle.CustomerDetalle
+import com.example.apolloproject.ui.screens.logincompose.pantallaLogin
 import com.example.apolloproject.ui.screens.orders.OrdersLista
 import com.example.apolloproject.ui.screens.orders.detalle.OrdersDetalle
+import com.example.apolloproject.ui.screens.splashscreen.SplashScreen
 
 @Composable
 fun navigationAct() {
@@ -18,9 +20,19 @@ fun navigationAct() {
 
     NavHost(
         navController = navController,
-        startDestination = "customersList",
+        startDestination = "splash",
 
     ){
+        composable(
+            "splash"
+        ){
+            SplashScreen(navController = navController)
+        }
+        composable("pantallaLogin") {
+            pantallaLogin(navController)
+        }
+
+
         composable(
             "customersList"
         ){

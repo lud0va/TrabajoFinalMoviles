@@ -7,7 +7,8 @@ import dagger.Module
 import dagger.Provides
 
 interface CustomerClient {
-
+    suspend fun updateCustomer(input: CustomerGraphDetail):CustomerGraphDetail?
+    suspend fun deleteCustomer(idCustomer: Int):Boolean?
     suspend fun getCustomer(id:Int):CustomerGraphDetail?
 
     suspend fun getCustomers(): List<CustomerGraph>

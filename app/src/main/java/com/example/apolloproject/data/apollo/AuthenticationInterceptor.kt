@@ -36,9 +36,7 @@ class AuthenticationInterceptor @Inject constructor(private val dataStoreTokens:
             }
         }
 
-        val request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $token")
-            .build()
+        val request = chain.request().newBuilder().header("Authorization", "Bearer $token").build()
 
         val response = chain.proceed(request)
 
@@ -60,9 +58,7 @@ class AuthenticationInterceptor @Inject constructor(private val dataStoreTokens:
                 }
             }.let { newToken ->
                 // retry request with new token
-                val newRequest = request.newBuilder()
-                    .addHeader("Authorization", "Bearer $newToken")
-                    .build()
+                val newRequest = chain.request().newBuilder().header("Authorization", "Bearer $token").build()
                 chain.proceed(newRequest)
 
             }
@@ -77,7 +73,7 @@ class AuthenticationInterceptor @Inject constructor(private val dataStoreTokens:
         val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
+            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()

@@ -53,7 +53,7 @@ class ConfiguracionRetrofit {
     @Provides
     fun retrofits(gson: Gson, clientOK: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
+            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientOK)
             .build()

@@ -1,10 +1,11 @@
 package com.example.apolloproject.domain.usecases.orderitems
 
-import com.example.apolloproject.data.apollo.graphql.ApolloOrderItemsRepository
+import com.example.apolloproject.data.OrderItemRepository
+import com.example.apolloproject.data.apollo.graphql.ApolloOrderItemsRemoteDataSource
 import com.example.apolloproject.domain.model.OrderItemGraph
 import javax.inject.Inject
 
-class AddOrderItemUseCase @Inject constructor(val apolloOrderItemsRepository: ApolloOrderItemsRepository)  {
+class AddOrderItemUseCase @Inject constructor(val orderItemRepository: OrderItemRepository)  {
 
-suspend fun invoke(input: OrderItemGraph): OrderItemGraph?=apolloOrderItemsRepository.addOrderItem(input)
+ fun invoke(input: OrderItemGraph)=orderItemRepository.addOrderItem(input)
 }

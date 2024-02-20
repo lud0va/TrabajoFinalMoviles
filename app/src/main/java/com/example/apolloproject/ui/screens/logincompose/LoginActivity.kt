@@ -44,28 +44,7 @@ import com.example.apolloproject.ui.screens.navigation.navigationAct
 import com.example.apolloproject.ui.theme.ApolloProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ApolloProjectTheme {
-                val navController = rememberNavController()
 
-                NavHost(
-                    navController = navController,
-                    startDestination = "pantallaLogin"
-                ) {
-                    composable("pantallaLogin") {
-                        pantallaLogin(navController)
-                    }
-                    composable("anavigation") {
-                        navigationAct()
-                    }
-                }
-        }
-    }
-}
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun pantallaLogin(
@@ -99,7 +78,17 @@ fun ContenidoPantalla(
 
     ) {
     val context = LocalContext.current // Obtener el contexto de la actividad
+    val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(state.error){
+        state.error?.let {
+            snackbarHostState.showSnackbar(
+                message = it,
+                actionLabel = "OK",
+
+            )
+        }
+    }
     Column(modifier = align) {
 
 
@@ -125,7 +114,7 @@ fun ContenidoPantalla(
         if (state.loginsucces) {
             Toast.makeText(context, "Usuario logeado", Toast.LENGTH_SHORT).show()
 
-            navController.navigate("anavigation")
+            navController.navigate("customersList")
             viewModel?.event(LoginContract.Event.CambiarLoginSuccess(false))
         }
         if (state.registersuccess){
@@ -198,6 +187,6 @@ fun passwUsuario(state: LoginContract.State, viewModel: LoginViewModel?) {
         )
     }
 }
-}
+
 
 

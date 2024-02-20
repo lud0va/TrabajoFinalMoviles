@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apolloproject.domain.usecases.orders.DeleteOrderUseCase
 import com.example.apolloproject.domain.usecases.orders.GetOrdersUseCase
+import com.example.apolloproject.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -34,14 +36,50 @@ class OrdersListaViewModel @Inject constructor(
     }
 
     fun deleteOrder(id:Int){
+            viewModelScope.launch {
+                deleteOrderUseCase.invoke(id)
+                    .collect{result->
+                        when(result){
+                            is NetworkResult.Error -> {
+                                _uiState.update {
+                                    it.copy(
+                                        error = result.message,
 
+                                        )
+                                }
+                            }
+
+                            is NetworkResult.Loading -> _uiState.update { it.copy(isLoading = true) }
+                            is NetworkResult.Success -> getListaOrder()
+                        }}
+
+                    }
     }
+
     fun getListaOrder(){
         viewModelScope.launch {
 
-            _uiState.update {
-                it.copy(orders = getOrdersUseCase.invoke())
-            }
+            getOrdersUseCase.invoke()
+                .collect{ result->
+                    when(result){
+                        is NetworkResult.Error -> {
+                            _uiState.update {
+                                it.copy(
+                                    error = result.message,
+
+                                    )
+                            }
+                        }
+
+                        is NetworkResult.Loading -> _uiState.update { it.copy(isLoading = true) }
+                        is NetworkResult.Success -> _uiState.update {
+                            it.copy(
+                                orders = result.data ?: emptyList()
+                                , isLoading = false
+                            )
+                        }
+                    }}
+
         }
 
     }

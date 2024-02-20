@@ -1,9 +1,7 @@
 package com.example.apolloproject.data
 
 import com.example.apolloproject.data.model.AuthenticationResponse
-import com.example.apolloproject.data.retrofit.calls.CredentialApi
-import com.example.apolloproject.common.ServiceResult
-import com.example.apolloproject.data.retrofit.response.CredentialsRemoteDataSource
+import com.example.apolloproject.data.remotedatasource.CredentialsRemoteDataSource
 import com.example.apolloproject.utils.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

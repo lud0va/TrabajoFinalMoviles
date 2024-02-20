@@ -3,8 +3,6 @@ package com.example.apolloproject.ui.screens.customers.detalle
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,22 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.example.apolloproject.domain.model.CommandGraph
-import com.example.apolloproject.domain.model.CustomerGraph
 import com.example.apolloproject.domain.model.TablesGraph
-import com.example.apolloproject.ui.screens.customers.CustomerItem
-import com.example.apolloproject.ui.screens.customers.CustomersListViewModel
-import com.example.apolloproject.ui.screens.customers.ListaCust
-import com.example.apolloproject.ui.screens.logincompose.LoginContract
-import com.example.apolloproject.ui.screens.logincompose.LoginViewModel
 
 @Composable
 fun CustomerDetalle(

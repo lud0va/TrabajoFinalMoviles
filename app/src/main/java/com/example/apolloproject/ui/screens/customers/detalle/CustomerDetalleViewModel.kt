@@ -2,14 +2,15 @@ package com.example.apolloproject.ui.screens.customers.detalle
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.apolloproject.domain.usecases.commands.GetCommandsByCustomerUseCase
 import com.example.apolloproject.domain.usecases.customers.GetCustomerUseCase
 import com.example.apolloproject.domain.usecases.restauranttables.GetAllTablesByCustUseCase
 import com.example.apolloproject.ui.screens.customers.CustomerListContract
+import com.example.apolloproject.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,7 +19,6 @@ import javax.inject.Inject
 class CustomerDetalleViewModel @Inject constructor(
    val getCustomerUseCase: GetCustomerUseCase,
    val getAllTablesByCustUseCase: GetAllTablesByCustUseCase,
-    val getAllCommandUseCase: GetCommandsByCustomerUseCase
 
 
 
@@ -40,16 +40,55 @@ class CustomerDetalleViewModel @Inject constructor(
 
     fun getTables(idCust:Int){
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(tables = getAllTablesByCustUseCase.invoke(idCust))
-            }
+
+              getAllTablesByCustUseCase.invoke(idCust)
+                  .collect{result->
+                      when(result){
+                          is NetworkResult.Error -> {
+                              _uiState.update {
+                                  it.copy(
+                                      error = result.message,
+
+                                      )
+                              }
+                          }
+                          is NetworkResult.Loading -> _uiState.update { it.copy(isLoading = true) }
+                          is NetworkResult.Success -> _uiState.update {
+                              it.copy(
+                                  tables = result.data
+                                      ?: emptyList(), isLoading = false
+                              )
+                          }
+                      }
+
+                  }
+
         }
     }
     fun getCustomer(idCust:Int){
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(customer = getCustomerUseCase.invoke(idCust))
-            }
+
+               getCustomerUseCase.invoke(idCust)
+                   .collect{result->
+                       when(result){
+                           is NetworkResult.Error ->  {
+                           _uiState.update {
+                               it.copy(
+                                   error = result.message,
+
+                                   )
+                           }
+                       }
+                           is NetworkResult.Loading -> _uiState.update { it.copy(isLoading = true) }
+                           is NetworkResult.Success -> _uiState.update {
+                               it.copy(
+                                   customer = result.data
+                                      , isLoading = false
+                               )
+                           }
+                       }
+                   }
+
         }
     }
 }

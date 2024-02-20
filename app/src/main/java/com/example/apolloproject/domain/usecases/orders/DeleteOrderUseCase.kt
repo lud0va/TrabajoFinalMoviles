@@ -1,11 +1,11 @@
 package com.example.apolloproject.domain.usecases.orders
 
-import com.example.apolloproject.data.apollo.graphql.ApolloOrdersRepository
-import com.example.apolloproject.domain.model.OrderGraph
+import com.example.apolloproject.data.OrdersRepository
+import com.example.apolloproject.data.apollo.graphql.ApolloOrdersRemoteDataSource
 import javax.inject.Inject
 
-class DeleteOrderUseCase @Inject constructor(val ordersRepository: ApolloOrdersRepository)  {
+class DeleteOrderUseCase @Inject constructor(val ordersRepository: OrdersRepository)  {
 
-    suspend fun invoke(idOrder:Int):Boolean? =ordersRepository.deleteOrder(idOrder)
+     fun invoke(idOrder:Int)=ordersRepository.deleteOrder(idOrder)
 
 }

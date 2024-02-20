@@ -8,7 +8,9 @@ interface OrdersListaContract {
         object GetOrders:Event()
     }
     data class State(
-        val  orders:List<OrderGraph> = emptyList()
+        val  orders:List<OrderGraph> = emptyList(),
+        val isLoading:Boolean=false,
+        val  error:String?=null,
 
-    )
+        )
 }

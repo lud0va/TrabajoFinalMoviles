@@ -41,9 +41,12 @@ type Orders {
 }
 
 type Mutation {
+    updateCustomer(input: CustomerInput ):Customer!
     addCustomer(input:CustomerInput):Customer!
     addOrderItem(input:OrderItemsInput):OrderItems!
-    deleteOrder(idOrder:Int):Boolean!
+    saveOrder(input: OrderInput ):Orders!
+    deleteCustomer( idCustomer:Int ):Boolean
+    deleteOrder(idOrder:Int):Boolean
 }
 
 type Query{
@@ -58,7 +61,7 @@ type Query{
     getCustomer(id:Int):Customer!
 }
 input CustomerInput{
-
+    id:Int
     firstName:String!
     lastName:String!
     email:String!
@@ -67,6 +70,8 @@ input CustomerInput{
 }
 input OrderInput{
     orderId:Int
+    orderDate: String!
+    customerid: Int
 }
 
 input OrderItemsInput{

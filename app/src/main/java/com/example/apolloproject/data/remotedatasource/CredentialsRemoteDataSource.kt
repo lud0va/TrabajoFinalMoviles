@@ -1,18 +1,17 @@
 package com.example.apolloproject.data.remotedatasource
 
-import com.apolloproject.GetAllTablesByCustomerQuery
-import com.example.apolloproject.data.apollo.graphql.mappers.toTableGraphql
 import com.example.apolloproject.data.model.AuthenticationResponse
-import com.example.apolloproject.data.retrofit.BaseApiResponse
 import com.example.apolloproject.data.retrofit.calls.CredentialApi
+import com.example.apolloproject.domain.model.Error
 import com.example.apolloproject.utils.DataStoreTokens
 import com.example.apolloproject.utils.NetworkResult
-import java.lang.Exception
+import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
 class CredentialsRemoteDataSource @Inject constructor(
     private val credentialApi: CredentialApi,
-    val dataStoreTokens: DataStoreTokens
+    val dataStoreTokens: DataStoreTokens,
+    private val moshi: Moshi
 ) {
     suspend fun getLogin(mail: String, password: String): NetworkResult<AuthenticationResponse> {
         try {
@@ -25,9 +24,10 @@ class CredentialsRemoteDataSource @Inject constructor(
                 }
                 error("No data")
             } else {
-                return NetworkResult.Error(
-                    response.message()
-                )
+                val msgerror = response.errorBody()?.string() ?: ""
+                val adapter = moshi.adapter(Error::class.java)
+                val error = adapter.fromJson(msgerror)
+                return NetworkResult.Error(error?.msg?:"")
 
             }
         } catch (e: Exception) {
@@ -36,24 +36,25 @@ class CredentialsRemoteDataSource @Inject constructor(
     }
 
 
-suspend fun doRegister(mail: String, password: String): NetworkResult<Boolean> {
-    try {
-        val response =
-            credentialApi.register(mail, password)
-        if (response.isSuccessful()) {
-            val body = response.body()
-            body?.let {
-                return NetworkResult.Success(it)
-            }
-            error("No data")
-        } else {
-            return NetworkResult.Error(
-                response.message()
-            )
+    suspend fun doRegister(mail: String, password: String): NetworkResult<Boolean> {
+        try {
+            val response =
+                credentialApi.register(mail, password)
+            if (response.isSuccessful()) {
+                val body = response.body()
+                body?.let {
+                    return NetworkResult.Success(it)
+                }
+                error("No data")
+            } else {
+                val msgerror = response.errorBody()?.string() ?: ""
+                val adapter = moshi.adapter(Error::class.java)
+                val error = adapter.fromJson(msgerror)
+                return NetworkResult.Error(error?.msg?:"")
 
+            }
+        } catch (e: Exception) {
+            return NetworkResult.Error(e.message ?: e.toString())
         }
-    } catch (e: Exception) {
-        return NetworkResult.Error(e.message ?: e.toString())
     }
-}
 }

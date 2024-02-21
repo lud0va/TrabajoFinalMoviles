@@ -15,7 +15,7 @@ interface LoginContract {
 
         val username:String?="luis",
         val password:String?="luis",
-        val  error:String?=null,
+        val error:String?=null,
         val loginsucces:Boolean=false,
         val registersuccess:Boolean=false
 

@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
@@ -24,12 +25,10 @@ class LoginViewModel @Inject constructor(
 
 
 ) : ViewModel() {
-    private val _uiState: MutableStateFlow<LoginContract.State> by lazy {
-        MutableStateFlow(LoginContract.State())
-    }
+    private val _uiState: MutableStateFlow<LoginContract.State> = MutableStateFlow(LoginContract.State())
+
     val uiState: StateFlow<LoginContract.State> = _uiState
-    private val _uiError = Channel<String>()
-    val uiError = _uiError.receiveAsFlow()
+
 
     fun event(event: LoginContract.Event) {
         when (event) {
@@ -61,13 +60,23 @@ class LoginViewModel @Inject constructor(
 
     fun doLogin() {
         viewModelScope.launch {
-            if (uiState.value.username != null || uiState.value.password != null) {
+            if (!uiState.value.username.equals("") || !uiState.value.password.equals("")){
                 uiState.value.username?.let {
                     uiState.value.password?.let { it1 ->
                         loginUseCase.invoke(
                             it,
                             it1
-                        ).collect{
+                        ).catch (action = {
+                            cause ->
+                            _uiState.update {
+                                it.copy(
+                                    error=cause.message
+
+                                )
+                            }
+                        })
+
+                        .collect{
                                 result->
                             when (result) {
                                 is NetworkResult.Error -> {
@@ -99,7 +108,7 @@ class LoginViewModel @Inject constructor(
 
     fun doRegister() {
         viewModelScope.launch {
-            if (uiState.value.username != null || uiState.value.password != null) {
+            if (!uiState.value.username.equals("") || !uiState.value.password.equals("")) {
 
                 uiState.value.username?.let {
                     uiState.value.password?.let { it1 ->

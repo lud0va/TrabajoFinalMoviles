@@ -43,7 +43,7 @@ fun CustomerDetalle(
 
         ContenidoCustPantalla(
             state.value,
-            viewModel, Modifier
+             Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         )
@@ -56,22 +56,21 @@ fun CustomerDetalle(
 fun ContenidoCustPantalla(
 
     state: CustomerDetalleContract.State,
-    viewModel: CustomerDetalleViewModel? = null,
     align: Modifier,
 
     ) {
     Column(modifier = align) {
-        idCust(state, viewModel)
+        idCust(state)
         Spacer(modifier = Modifier.padding(16.dp))
-        firstNameCust(state, viewModel)
+        firstNameCust(state)
         Spacer(modifier = Modifier.padding(6.dp))
-        lastNameCust(state, viewModel)
+        lastNameCust(state)
         Spacer(modifier = Modifier.padding(6.dp))
-        emailCust(state, viewModel)
+        emailCust(state)
         Spacer(modifier = Modifier.padding(6.dp))
-        phoneCust(state, viewModel)
+        phoneCust(state)
         Spacer(modifier = Modifier.padding(6.dp))
-        dateOfBirth(state, viewModel)
+        dateOfBirth(state)
         Spacer(modifier = Modifier.padding(6.dp))
 
         Text(text = "table list")
@@ -117,12 +116,12 @@ fun ListaTables(
 }
 
 @Composable
-fun idCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun idCust(state: CustomerDetalleContract.State) {
     Text(text = state.customer?.id.toString())
 }
 
 @Composable
-fun firstNameCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun firstNameCust(state: CustomerDetalleContract.State) {
     state.customer?.firstName?.let { firstname ->
         TextField(
             value = firstname,
@@ -138,7 +137,7 @@ fun firstNameCust(state: CustomerDetalleContract.State, viewModel: CustomerDetal
 }
 
 @Composable
-fun lastNameCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun lastNameCust(state: CustomerDetalleContract.State) {
     state.customer?.firstName?.let { firstname ->
         TextField(
             value = firstname,
@@ -154,7 +153,7 @@ fun lastNameCust(state: CustomerDetalleContract.State, viewModel: CustomerDetall
 }
 
 @Composable
-fun emailCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun emailCust(state: CustomerDetalleContract.State) {
     state.customer?.email?.let { email ->
         TextField(
             value = email,
@@ -170,7 +169,7 @@ fun emailCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleVi
 }
 
 @Composable
-fun phoneCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun phoneCust(state: CustomerDetalleContract.State) {
     state.customer?.phone?.let { phone ->
         TextField(
             value = phone,
@@ -186,7 +185,7 @@ fun phoneCust(state: CustomerDetalleContract.State, viewModel: CustomerDetalleVi
 }
 
 @Composable
-fun dateOfBirth(state: CustomerDetalleContract.State, viewModel: CustomerDetalleViewModel?) {
+fun dateOfBirth(state: CustomerDetalleContract.State) {
     state.customer?.dateOfBirth?.let { date ->
         TextField(
             value = date.toString(),

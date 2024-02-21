@@ -10,6 +10,9 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.ToJson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +27,7 @@ import java.net.CookiePolicy
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -34,6 +38,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class ConfiguracionRetrofit {
 
+    @Singleton
+    @Provides
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(LocalDateTimeAdapter())
+            .build()
+    }
 
     @Singleton
     @Provides
@@ -53,7 +64,7 @@ class ConfiguracionRetrofit {
     @Provides
     fun retrofits(gson: Gson, clientOK: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
+            .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(clientOK)
             .build()
@@ -98,5 +109,17 @@ class ConfiguracionRetrofit {
                     )
                 } as JsonSerializer<LocalDate>
             ).create()
+    }
+    class LocalDateTimeAdapter {
+
+        @ToJson
+        fun toJson(value: LocalDateTime): String {
+            return value.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        }
+
+        @FromJson
+        fun fromJson(value: String): LocalDateTime {
+            return LocalDateTime.parse(value, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        }
     }
 }

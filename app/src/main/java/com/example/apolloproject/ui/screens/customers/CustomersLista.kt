@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.apolloproject.R
 import com.example.apolloproject.domain.model.CustomerGraph
+import com.example.apolloproject.ui.screens.orders.OrderItem
+import com.example.apolloproject.ui.screens.orders.OrdersListaContract
 import kotlinx.coroutines.delay
 
 @Composable
@@ -62,10 +64,11 @@ fun CustomersLista(
 
 
     ListaCust(
-        viewModel,
+
         state = state.value,
         onViewDetalle = onViewDetalle,
         bottomNavigationBar = bottomNavigationBar,
+        {viewModel?.event(CustomerListContract.Event.deleteCustomer(it))}
     )
 
 }
@@ -73,10 +76,10 @@ fun CustomersLista(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListaCust(
-    viewModel: CustomersListViewModel?=null,
     state: CustomerListContract.State,
     onViewDetalle: (Int) -> Unit,
     bottomNavigationBar: @Composable () -> Unit = {},
+    delete:(Int)->Unit
 
     ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -113,11 +116,11 @@ fun ListaCust(
 
             items(items = state.customers, key = { cust -> cust.id }) { cust ->
                 SwipeToDeleteContainer(item = cust, onDelete ={
-                    viewModel?.event(CustomerListContract.Event.deleteCustomer(cust.id)) }) { customer->
-                    CustomerItem(
-                        customer = customer,
-                        onViewDetalle = onViewDetalle
-                    )
+                        delete(it.id)
+                    }) { customer ->
+                    CustomerItem(customer = customer, onViewDetalle = onViewDetalle)
+
+
                 }
 
 

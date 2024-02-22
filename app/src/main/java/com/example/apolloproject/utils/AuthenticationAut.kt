@@ -1,6 +1,5 @@
 package com.example.apolloproject.utils
 
-import android.util.Log
 import com.example.apolloproject.common.ConstantesServer
 import com.example.apolloproject.data.retrofit.calls.CredentialApi
 import com.google.gson.GsonBuilder
@@ -14,6 +13,8 @@ import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+
 
 class AuthenticationAut(private val dataStoreTokens: DataStoreTokens) : Authenticator {
 
@@ -32,7 +33,7 @@ class AuthenticationAut(private val dataStoreTokens: DataStoreTokens) : Authenti
                     dataStoreTokens.saveAccessToken(newAcess)
                 }
                 response.request.newBuilder()
-                    .header("Authorization", "Bearer $newAcess").build()
+                    .header(ConstantesServer.AUTHORIZATION, "Bearer $newAcess").build()
             } else {
                 null
             }
@@ -48,7 +49,7 @@ class AuthenticationAut(private val dataStoreTokens: DataStoreTokens) : Authenti
             val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
+                .baseUrl(ConstantesServer.IPSERVIDORAUTH)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build()

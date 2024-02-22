@@ -2,7 +2,7 @@ package com.example.apolloproject.common
 
 object ConstantesServer {
 
-
+    const val AUTHORIZATION = "Authorization"
     const val IPSERVIDORGRAPH = "http://192.168.1.24:8081"
     const val IPSERVIDORGRAPHCLASE="http://192.168.16.1:8081"
 

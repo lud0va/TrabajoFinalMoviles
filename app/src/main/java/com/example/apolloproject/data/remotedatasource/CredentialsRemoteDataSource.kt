@@ -1,5 +1,6 @@
 package com.example.apolloproject.data.remotedatasource
 
+import com.example.apolloproject.common.Constantes
 import com.example.apolloproject.data.model.AuthenticationResponse
 import com.example.apolloproject.data.retrofit.calls.CredentialApi
 import com.example.apolloproject.domain.model.Error
@@ -10,7 +11,6 @@ import javax.inject.Inject
 
 class CredentialsRemoteDataSource @Inject constructor(
     private val credentialApi: CredentialApi,
-    val dataStoreTokens: DataStoreTokens,
     private val moshi: Moshi
 ) {
     suspend fun getLogin(mail: String, password: String): NetworkResult<AuthenticationResponse> {
@@ -22,12 +22,12 @@ class CredentialsRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
-                val msgerror = response.errorBody()?.string() ?: ""
+                val msgerror = response.errorBody()?.string() ?:Constantes.SPACE
                 val adapter = moshi.adapter(Error::class.java)
                 val error = adapter.fromJson(msgerror)
-                return NetworkResult.Error(error?.msg?:"")
+                return NetworkResult.Error(error?.msg?:Constantes.SPACE)
 
             }
         } catch (e: Exception) {
@@ -45,12 +45,12 @@ class CredentialsRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
-                val msgerror = response.errorBody()?.string() ?: ""
+                val msgerror = response.errorBody()?.string() ?:Constantes.SPACE
                 val adapter = moshi.adapter(Error::class.java)
                 val error = adapter.fromJson(msgerror)
-                return NetworkResult.Error(error?.msg?:"")
+                return NetworkResult.Error(error?.msg?:Constantes.SPACE)
 
             }
         } catch (e: Exception) {

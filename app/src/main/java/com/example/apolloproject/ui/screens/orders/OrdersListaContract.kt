@@ -1,5 +1,6 @@
 package com.example.apolloproject.ui.screens.orders
 
+import com.example.apolloproject.domain.model.CustomerGraph
 import com.example.apolloproject.domain.model.OrderGraph
 
 interface OrdersListaContract {
@@ -8,9 +9,11 @@ interface OrdersListaContract {
         object GetOrders:Event()
     }
     data class State(
+
+        val order:OrderGraph?=null,
         val  orders:List<OrderGraph> = emptyList(),
         val isLoading:Boolean=false,
-        val  error:String?=null,
+        val  message:String?=null,
 
         )
 }

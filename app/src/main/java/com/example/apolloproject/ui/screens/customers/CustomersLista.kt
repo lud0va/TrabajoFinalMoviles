@@ -1,10 +1,10 @@
 package com.example.apolloproject.ui.screens.customers
 
 import androidx.compose.animation.AnimatedVisibility
+
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,80 +32,85 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+
+
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.apolloproject.R
 import com.example.apolloproject.domain.model.CustomerGraph
-import com.example.apolloproject.ui.screens.orders.OrderItem
-import com.example.apolloproject.ui.screens.orders.OrdersListaContract
 import kotlinx.coroutines.delay
 
 @Composable
 fun CustomersLista(
+    navController: NavController,
     viewModel: CustomersListViewModel = hiltViewModel(),
     onViewDetalle: (Int) -> Unit,
     bottomNavigationBar: @Composable () -> Unit = {}
 ) {
-    val state = viewModel.uiState.collectAsState()
+
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
+
     LaunchedEffect(Unit) {
         viewModel.event(CustomerListContract.Event.getCustomers)
     }
-    val snackbarHostState = remember { SnackbarHostState() }
 
 
 
     ListaCust(
-
+        navController = navController,
         state = state.value,
         onViewDetalle = onViewDetalle,
         bottomNavigationBar = bottomNavigationBar,
-        {viewModel?.event(CustomerListContract.Event.deleteCustomer(it))}
+        { viewModel?.event(CustomerListContract.Event.DeleteCustomer(it)) }
     )
 
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListaCust(
+    navController: NavController,
     state: CustomerListContract.State,
     onViewDetalle: (Int) -> Unit,
     bottomNavigationBar: @Composable () -> Unit = {},
-    delete:(Int)->Unit
+    delete: (Int) -> Unit
 
-    ) {
+) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(state.error){
-        state.error?.let {
-            snackbarHostState.showSnackbar(
-                message = it,
-                actionLabel = "OK"
-            )
-        }
-    }
-
-
+    val addCustomerPath= stringResource(id = R.string.addCustomerPath)
+    val label= stringResource(id = R.string.ok)
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = bottomNavigationBar,
 
         floatingActionButton = {
-            Button(onClick = { /*TODO*/ }) {
-                Text("+")
+            Button(onClick = { navController.navigate(addCustomerPath) }) {
+                Text(stringResource(id = R.string.plus))
             }
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { innerPadding ->
 
+        LaunchedEffect(state.message) {
+            state.message?.let {
+                snackbarHostState.showSnackbar(
+                    message = it,
+                    actionLabel = label
+                )
+            }
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -115,9 +120,9 @@ fun ListaCust(
         ) {
 
             items(items = state.customers, key = { cust -> cust.id }) { cust ->
-                SwipeToDeleteContainer(item = cust, onDelete ={
-                        delete(it.id)
-                    }) { customer ->
+                SwipeToDeleteContainer(item = cust, onDelete = {
+                    delete(it.id)
+                }) { customer ->
                     CustomerItem(customer = customer, onViewDetalle = onViewDetalle)
 
 
@@ -198,29 +203,31 @@ fun DeleteBackground(
         modifier = Modifier
             .fillMaxSize()
             .background(color)
-            .padding(16.dp),
+            .padding(dimensionResource(id = R.dimen.dimen_16dp)),
         contentAlignment = Alignment.CenterEnd
     ) {
         Icon(
             imageVector = Icons.Default.Delete,
-          contentDescription = null,
+            contentDescription = null,
             tint = Color.White,
         )
     }
 }
 
-    @Composable
-    fun CustomerItem(
-        customer: CustomerGraph,
-        onViewDetalle: (Int) -> Unit,
-        modifier: Modifier = Modifier
+@Composable
+fun CustomerItem(
 
-    ) {
+    customer: CustomerGraph,
+    onViewDetalle: (Int) -> Unit,
+    modifier: Modifier = Modifier
+
+) {
+
         Card(modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.dimen_8dp))
             .clickable { onViewDetalle(customer.id) }) {
-            Row(modifier = Modifier.padding(8.dp)) {
+            Row(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_8dp)) ) {
                 Text(
                     modifier = Modifier.weight(weight = 0.4F),
                     text = customer.id.toString()
@@ -238,4 +245,5 @@ fun DeleteBackground(
             }
         }
 
-    }
+}
+

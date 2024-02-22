@@ -5,6 +5,7 @@ import com.apolloproject.DeleteOrderMutation
 import com.apolloproject.GetAllOrdersQuery
 import com.apolloproject.GetOrderQuery
 import com.apolloproject.SaveOrderMutation
+import com.example.apolloproject.common.Constantes
 import com.example.apolloproject.data.apollo.graphql.mappers.toOrder
 import com.example.apolloproject.data.apollo.graphql.mappers.toOrderGrapg
 import com.example.apolloproject.data.apollo.graphql.mappers.toOrderInput
@@ -26,10 +27,10 @@ class ApolloOrdersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return NetworkResult.Error(
-                    response.errors?.first()?.message ?: ""
+                    response.errors?.first()?.message ?:  Constantes.SPACE
                 )
 
             }
@@ -49,10 +50,10 @@ class ApolloOrdersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return NetworkResult.Error(
-                    response.errors?.first()?.message ?: ""
+                    response.errors?.first()?.message ?:  Constantes.SPACE
                 )
 
             }
@@ -71,10 +72,10 @@ class ApolloOrdersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return NetworkResult.Error(
-                    response.errors?.first()?.message ?: ""
+                    response.errors?.first()?.message ?:  Constantes.SPACE
                 )
 
             }
@@ -92,10 +93,10 @@ class ApolloOrdersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return NetworkResult.Error(
-                    response.errors?.first()?.message ?: ""
+                    response.errors?.first()?.message ?:  Constantes.SPACE
                 )
 
             }

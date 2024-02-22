@@ -12,7 +12,7 @@ fun GetAllOrdersQuery.GetAllOrder.toOrder(): OrderGraph {
     return OrderGraph(
         orderId = orderId,
         orderDate = LocalDateTime.parse(orderDate),
-        customerId = null
+        customerId = customer?.id
 
 
     )

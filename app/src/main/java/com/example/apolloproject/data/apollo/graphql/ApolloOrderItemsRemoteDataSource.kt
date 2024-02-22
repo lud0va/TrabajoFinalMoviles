@@ -3,6 +3,7 @@ package com.example.apolloproject.data.apollo.graphql
 import com.apollographql.apollo3.ApolloClient
 import com.apolloproject.AddOrderItemMutation
 import com.apolloproject.GetOrderItemsByOrderQuery
+import com.example.apolloproject.common.Constantes
 import com.example.apolloproject.data.apollo.graphql.mappers.toOrderItemGraph
 import com.example.apolloproject.data.apollo.graphql.mappers.toOrderItemInput
 import com.example.apolloproject.domain.model.OrderItemGraph
@@ -24,10 +25,10 @@ class ApolloOrderItemsRemoteDataSource @Inject constructor(
                  body?.let {
                      return NetworkResult.Success(it)
                  }
-                 error("No data")
+                 error(Constantes.NO_DATA)
              } else {
                  return NetworkResult.Error(
-                     response.errors?.first()?.message ?: ""
+                     response.errors?.first()?.message ?:  Constantes.SPACE
                  )
 
              }
@@ -47,10 +48,10 @@ class ApolloOrderItemsRemoteDataSource @Inject constructor(
                  body?.let {
                      return NetworkResult.Success(it)
                  }
-                 error("No data")
+                 error(Constantes.NO_DATA)
              } else {
                  return NetworkResult.Error(
-                     response.errors?.first()?.message ?: ""
+                     response.errors?.first()?.message ?:  Constantes.SPACE
                  )
 
              }

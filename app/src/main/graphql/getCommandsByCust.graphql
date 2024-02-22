@@ -1,7 +1,0 @@
-query getCommandsByCustomer($idCust: Int!) {
-    getCommandsByCustomer(idCust: $idCust) {
-        id
-        commandName
-
-    }
-}

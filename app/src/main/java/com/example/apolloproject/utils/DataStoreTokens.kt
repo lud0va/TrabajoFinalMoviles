@@ -3,14 +3,21 @@ package com.example.apolloproject.utils
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.apolloproject.common.Constantes
+import com.example.apolloproject.common.ConstantesServer
 import com.example.apolloproject.data.apollo.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+
+
+
+
+
 class DataStoreTokens(private val context: Context) {
     companion object{
-        private val accessToken = stringPreferencesKey("accesstoken")
-        private val refreshToken = stringPreferencesKey("refreshtoken")
+        private val accessToken = stringPreferencesKey(Constantes.ACCESSTOKEN)
+        private val refreshToken = stringPreferencesKey(Constantes.REFRESHTOKEN)
     }
 
     fun getAccessToken(): Flow<String?>{

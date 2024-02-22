@@ -2,5 +2,8 @@ query getAllOrders{
     getAllOrders {
         orderId
         orderDate
+        customer {
+            id
+        }
     }
 }

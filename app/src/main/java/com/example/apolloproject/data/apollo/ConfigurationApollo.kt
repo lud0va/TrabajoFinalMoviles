@@ -7,7 +7,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
 import com.example.apolloproject.common.ConstantesServer
-import com.example.apolloproject.data.retrofit.CacheAuthorization
 import com.example.apolloproject.utils.AuthenticationAut
 import com.example.apolloproject.utils.AuthenticationInterceptor
 import com.example.apolloproject.utils.DataStoreTokens
@@ -34,9 +33,6 @@ class ConfigurationApollo {
     fun provideTokenManager(@ApplicationContext context: Context): DataStoreTokens =
         DataStoreTokens(context)
 
-    @Singleton
-    @Provides
-    fun cache(): CacheAuthorization = CacheAuthorization()
 
 
     @Singleton
@@ -60,7 +56,7 @@ class ConfigurationApollo {
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return ApolloClient.Builder()
-            .serverUrl(ConstantesServer.IPSERVIDORGRAPHCLASE+ConstantesServer.PATHGRAPHQL)
+            .serverUrl(ConstantesServer.IPSERVIDORGRAPH+ConstantesServer.PATHGRAPHQL)
             .okHttpClient(
                 OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)

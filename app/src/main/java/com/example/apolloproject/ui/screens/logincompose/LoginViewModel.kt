@@ -2,32 +2,33 @@ package com.example.apolloproject.ui.screens.logincompose
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.apolloproject.R
 import com.example.apolloproject.domain.usecases.credentials.LoginUseCase
 import com.example.apolloproject.domain.usecases.credentials.RegisterUseCase
 import com.example.apolloproject.domain.usecases.customers.GetCustomersUseCase
 import com.example.apolloproject.utils.NetworkResult
+import com.example.apolloproject.utils.StringProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val stringProvider: StringProvider,
     private val loginUseCase: LoginUseCase,
     private val registerUseCase: RegisterUseCase,
-    private val getCustomersUseCase: GetCustomersUseCase
 
 
-) : ViewModel() {
-    private val _uiState: MutableStateFlow<LoginContract.State> = MutableStateFlow(LoginContract.State())
 
-    val uiState: StateFlow<LoginContract.State> = _uiState
+    ) : ViewModel() {
+    private val _uiState= MutableStateFlow(LoginContract.State())
+    val uiState: StateFlow<LoginContract.State> = _uiState.asStateFlow()
+
 
 
     fun event(event: LoginContract.Event) {
@@ -60,7 +61,7 @@ class LoginViewModel @Inject constructor(
 
     fun doLogin() {
         viewModelScope.launch {
-            if (!uiState.value.username.equals("") || !uiState.value.password.equals("")){
+            if (!uiState.value.username.isNullOrBlank()|| !uiState.value.password.isNullOrBlank()){
                 uiState.value.username?.let {
                     uiState.value.password?.let { it1 ->
                         loginUseCase.invoke(
@@ -70,7 +71,7 @@ class LoginViewModel @Inject constructor(
                             cause ->
                             _uiState.update {
                                 it.copy(
-                                    error=cause.message
+                                    message=cause.message
 
                                 )
                             }
@@ -82,15 +83,15 @@ class LoginViewModel @Inject constructor(
                                 is NetworkResult.Error -> {
                                     _uiState.update {
                                         it.copy(
-                                            error = result.message,
+                                            message = result.message,
 
                                             )
                                     }
                                 }
 
-                                is NetworkResult.Loading -> _uiState.update { it.copy() }
-                           //     is NetworkResult.Success ->getCustomersUseCase.invoke()
-                                is NetworkResult.Success ->_uiState.update { it.copy(loginsucces = true) }
+                                is NetworkResult.Loading -> _uiState.update { it.copy(isLoading = true ) }
+
+                                is NetworkResult.Success ->_uiState.update { it.copy(loginsucces = true, message = stringProvider.getString(R.string.loginCompl)) }
 
                             }
                         }
@@ -98,7 +99,7 @@ class LoginViewModel @Inject constructor(
                 }
             } else {
                 _uiState.update {
-                    it.copy(error = "Introduce un usuario y contraseña")
+                    it.copy(message = stringProvider.getString(R.string.introducirNamePasw))
                 }
             }
         }
@@ -108,7 +109,7 @@ class LoginViewModel @Inject constructor(
 
     fun doRegister() {
         viewModelScope.launch {
-            if (!uiState.value.username.equals("") || !uiState.value.password.equals("")) {
+            if (!uiState.value.username.isNullOrBlank() || !uiState.value.password.isNullOrBlank()) {
 
                 uiState.value.username?.let {
                     uiState.value.password?.let { it1 ->
@@ -120,14 +121,14 @@ class LoginViewModel @Inject constructor(
                                 is NetworkResult.Error -> {
                                     _uiState.update {
                                         it.copy(
-                                            error = result.message,
+                                            message = result.message,
 
                                             )
                                     }
                                 }
 
                                 is NetworkResult.Loading -> _uiState.update { it.copy() }
-                                is NetworkResult.Success -> _uiState.update { it.copy(registersuccess = true) }
+                                is NetworkResult.Success -> _uiState.update { it.copy(message = stringProvider.getString(R.string.registroCompl), registersuccess = true) }
 
                             }
                         }
@@ -136,8 +137,10 @@ class LoginViewModel @Inject constructor(
                     }
                 }
 
-            }
+            }else{
+                _uiState.update { it.copy(message = stringProvider.getString(R.string.usuarInv), registersuccess = true) }
 
+            }
 
         }
 

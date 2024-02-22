@@ -13,9 +13,10 @@ interface LoginContract {
     }
     data class State(
 
-        val username:String?="luis",
-        val password:String?="luis",
-        val error:String?=null,
+        val username:String?=null,
+        val password:String?=null,
+        val message:String?=null,
+        val isLoading:Boolean=false,
         val loginsucces:Boolean=false,
         val registersuccess:Boolean=false
 

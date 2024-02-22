@@ -2,6 +2,7 @@ package com.example.apolloproject.data.apollo.graphql
 
 import com.apollographql.apollo3.ApolloClient
 import com.apolloproject.GetAllTablesByCustomerQuery
+import com.example.apolloproject.common.Constantes
 import com.example.apolloproject.data.apollo.graphql.mappers.toTableGraphql
 import com.example.apolloproject.domain.model.TablesGraph
 import com.example.apolloproject.utils.NetworkResult
@@ -20,10 +21,10 @@ class ApolloTablesRemoteDataSource @Inject constructor(
                  body?.let {
                      return NetworkResult.Success(it)
                  }
-                 error("No data")
+                 error(Constantes.NO_DATA)
              } else {
                  return NetworkResult.Error(
-                     response.errors?.first()?.message ?: ""
+                     response.errors?.first()?.message ?:  Constantes.SPACE
                  )
 
              }

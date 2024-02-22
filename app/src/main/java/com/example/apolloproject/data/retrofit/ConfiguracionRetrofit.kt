@@ -19,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
@@ -51,21 +52,25 @@ class ConfiguracionRetrofit {
     fun getOkHttpClient(): OkHttpClient {
         val cookieManager = CookieManager()
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .readTimeout(Duration.of(10, ChronoUnit.MINUTES))
             .callTimeout(Duration.of(10, ChronoUnit.MINUTES))
+            .addInterceptor(loggingInterceptor)
             .connectTimeout(Duration.of(10, ChronoUnit.MINUTES))
-            .connectionPool(ConnectionPool(1, 1, TimeUnit.SECONDS)) // necesario para la sesion
+            .connectionPool(ConnectionPool(1, 1, TimeUnit.SECONDS))
             .build()
     }
 
     @Singleton
     @Provides
     fun retrofits(gson: Gson, clientOK: OkHttpClient): Retrofit {
+
         return Retrofit.Builder()
-            .baseUrl(ConstantesServer.IPSERVIDORAUTHCLASE)
+            .baseUrl(ConstantesServer.IPSERVIDORAUTH)
             .addConverterFactory(GsonConverterFactory.create(gson))
+
             .client(clientOK)
             .build()
     }

@@ -1,4 +1,4 @@
-package com.example.apolloproject.ui.screens.orders.detalle
+package com.example.apolloproject.ui.screens.orders.add
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -23,7 +23,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -31,18 +30,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.apolloproject.R
-import com.example.apolloproject.domain.model.OrderItemGraph
+import com.example.apolloproject.domain.model.CustomerGraph
+
 
 @Composable
-fun OrdersDetalle(
-    orderId: Int,
-    viewModel: OrdersViewModel = hiltViewModel(),
+fun AddOrder (
+    viewModel: AddOrderViewModel = hiltViewModel(),
 
-    ) {
+    ){
     val state = viewModel.uiState.collectAsStateWithLifecycle()
-    viewModel.event(OrdersDetalleContract.Event.GetOrder(orderId))
-    viewModel.event(OrdersDetalleContract.Event.GetOrderItems(orderId))
+    viewModel.event(AddOrderContract.Event.GetCustomers)
+
 
     Box(
         Modifier
@@ -50,31 +50,40 @@ fun OrdersDetalle(
             .padding(dimensionResource(id = R.dimen.dimen_16dp))
     ) {
 
-        ContenidoOrderPantalla(
+        ContenidoAddOrder(
             state.value,
-            {viewModel.event(OrdersDetalleContract.Event.AddordeItem)}
+            {viewModel.event(AddOrderContract.Event.Addorder)},
+            {viewModel.event(AddOrderContract.Event.CambiarCustomerId(it))}
             , Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.dimen_16dp))
         )
     }
 
-}
 
+
+
+
+}
 @Composable
-fun ContenidoOrderPantalla(
-    state: OrdersDetalleContract.State,
-    addItem: ()->Unit,
+fun ContenidoAddOrder(
+    state: AddOrderContract.State,
+    addOrder: ()->Unit,
+    cambiarId: (String) -> Unit,
     align: Modifier,
 
-    ) {
+    ){
+
     Column(modifier = align) {
-        idOrder(state, )
+
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_16dp)))
-        dateOrder(state, )
+
+        CustomerId(state,cambiarId)
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_16dp)))
-        ListaItems(
-            addItem,
+        adddateOrder(state )
+        Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_16dp)))
+        ListaAddCust(
+            addOrder,
             state = state,
 
             )
@@ -86,11 +95,47 @@ fun ContenidoOrderPantalla(
 }
 
 
+@Composable
+fun CustomerId(state: AddOrderContract.State,cambiarId: (String) -> Unit){
+
+        TextField(
+            value = state.orderGraph?.customerId.toString(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = {
+
+                    cambiarId(it )
+
+
+            },
+            singleLine = true,
+            enabled = true,
+            modifier = Modifier.fillMaxWidth()
+
+        )
+
+
+}
+
+@Composable
+fun adddateOrder(state: AddOrderContract.State) {
+
+        TextField(
+            value = state.orderGraph?.orderDate.toString(),
+
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            onValueChange = {},
+            singleLine = true,
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+
+        )
+
+}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListaItems(
-    addItem: () -> Unit,
-    state: OrdersDetalleContract.State,
+fun ListaAddCust(
+    addOrder: () -> Unit,
+    state: AddOrderContract.State,
 
     ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -99,7 +144,7 @@ fun ListaItems(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            Button(onClick = { addItem() }) {
+            Button(onClick = { addOrder() }) {
                 Text(plus)
             }
         },
@@ -120,9 +165,9 @@ fun ListaItems(
                 .background(Color.Gray)
         ) {
 
-            items(items = state.ordeItem, key = { item -> item.orderItemId?:0 }) { orderItem ->
-                OrderItem(
-                    orderItem = orderItem,
+            items(items = state.customers, key = { item -> item.id }) { customer ->
+                CustomerAddItem(
+                    customer = customer,
 
                     modifier = Modifier.animateItemPlacement(
                         animationSpec = tween(1000)
@@ -134,56 +179,26 @@ fun ListaItems(
 }
 
 @Composable
-fun idOrder(state: OrdersDetalleContract.State) {
-    Text(text = state.orderGraph?.orderId.toString())
-}
-
-@Composable
-fun dateOrder(state: OrdersDetalleContract.State) {
-
-        TextField(
-            value = state.orderGraph?.orderDate.toString() ,
-
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            onValueChange = {},
-            singleLine = true,
-            enabled = false,
-            modifier = Modifier.fillMaxWidth()
-
-        )
-
-}
-
-
-@Composable
-fun OrderItem(
-    orderItem: OrderItemGraph,
+fun CustomerAddItem(
+    customer: CustomerGraph,
 
     modifier: Modifier = Modifier
 
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.dimen_8dp))
-    ) {
+    Card(modifier = modifier
+        .fillMaxWidth()
+        .padding(dimensionResource(id = R.dimen.dimen_8dp))
+      ) {
         Row(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_8dp))) {
             Text(
                 modifier = Modifier.weight(weight = 0.4F),
-                text = orderItem.orderItemId.toString()
+                text = customer.id.toString()
 
             )
             Text(
-                modifier = Modifier.weight(0.4F),
-                text = orderItem.name
-
+                modifier = Modifier.weight(weight = 0.4F),
+                text = customer.firstName
             )
-            Text(
-                modifier = Modifier.weight(0.4F),
-                text = orderItem.price.toString()
-
-            )
-
 
         }
     }

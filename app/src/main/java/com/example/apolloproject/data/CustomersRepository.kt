@@ -20,7 +20,7 @@ class CustomersRepository @Inject constructor(
         }
 
     }
-    fun addCustomer(input: CustomerGraphDetail): Flow<NetworkResult<CustomerGraph?>>{
+    fun addCustomer(input: CustomerGraphDetail): Flow<NetworkResult<CustomerGraphDetail?>>{
         return flow {
             emit(NetworkResult.Loading())
             val result=customerRemoteDataSource.addCustomer(input)
@@ -40,6 +40,7 @@ class CustomersRepository @Inject constructor(
         return flow {
             emit(NetworkResult.Loading())
             val result=customerRemoteDataSource.deleteCustomer(idCustomer)
+            emit(result)
         }
     }
     fun updateCustomer(input: CustomerGraphDetail): Flow<NetworkResult<CustomerGraphDetail?>>{

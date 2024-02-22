@@ -1,11 +1,7 @@
 package com.example.apolloproject.ui.screens.logincompose
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,54 +13,54 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
+
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
+
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+
 import androidx.navigation.compose.rememberNavController
-import com.example.apolloproject.ui.screens.navigation.navigationAct
-import com.example.apolloproject.ui.theme.ApolloProjectTheme
-import dagger.hilt.android.AndroidEntryPoint
+import com.example.apolloproject.R
 
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun pantallaLogin(
-    navController :NavController= rememberNavController(),
+    navController: NavController = rememberNavController(),
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     Box(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(dimensionResource(id = R.dimen.dimen_16dp))
     ) {
 
         ContenidoPantalla(
-          navController,
+            navController,
             state,
-            viewModel, Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            viewModel,
+            { viewModel.event(LoginContract.Event.login) },
+            { viewModel.event(LoginContract.Event.register) },
+            { viewModel.event(LoginContract.Event.CambiarPasswState(it)) },
+            { viewModel.event(LoginContract.Event.CambiarUserState(it)) }
+
+
         )
     }
 
@@ -72,71 +68,130 @@ fun pantallaLogin(
 
 @Composable
 fun ContenidoPantalla(
-    navController :NavController,
+    navController: NavController,
     state: LoginContract.State,
     viewModel: LoginViewModel? = null,
-    align: Modifier,
 
-    ) {
-    val context = LocalContext.current // Obtener el contexto de la actividad
+    login: () -> Unit,
+    regist: () -> Unit,
+    cambiarPassw: (String) -> Unit,
+    cambiarUser: (String) -> Unit
+
+
+) {
+    val label= stringResource(id = R.string.ok)
+    val navCustList= stringResource(id = R.string.customerListPath)
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(state.error){
-        state.error?.let {
-            snackbarHostState.showSnackbar(
-                message = it,
-                actionLabel = "OK",
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButtonPosition = FabPosition.Center
+    ) { innerPadding ->
 
-            )
+        LaunchedEffect(state.message) {
+            state.message?.let {
+
+                snackbarHostState.showSnackbar(
+                    message = it,
+                    actionLabel = label
+                )
+            }
+
         }
-    }
-    Column(modifier = align) {
 
-
-        Spacer(modifier = Modifier.padding(16.dp))
-        nombreUsuario(state, viewModel)
-        Spacer(modifier = Modifier.padding(6.dp))
-        passwUsuario(state, viewModel)
-        Spacer(modifier = Modifier.padding(6.dp))
-
-        Spacer(modifier = Modifier.height(6.dp))
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(innerPadding)
         ) {
-            loginBtn( viewModel)
-            Spacer(modifier = Modifier.padding(16.dp))
-            registerBtn( viewModel)
+
+
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_16dp)))
+            nombreUsuario(state, cambiarUser)
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_6dp)))
+            passwUsuario(state, cambiarPassw)
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_6dp)))
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.dimen_6dp)))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.dimen_16dp)),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                loginBtn(login)
+                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.dimen_16dp)))
+                registerBtn(regist)
+
+
+            }
+
+            if (state.loginsucces) {
+                LaunchedEffect(state.loginsucces) {
+                    viewModel?.event(LoginContract.Event.CambiarLoginSuccess(false))
+
+                    navController.navigate(navCustList)
+                }
+            }
 
 
         }
-        if (state.loginsucces) {
-            Toast.makeText(context, "Usuario logeado", Toast.LENGTH_SHORT).show()
-
-            navController.navigate("customersList")
-            viewModel?.event(LoginContract.Event.CambiarLoginSuccess(false))
-        }
-        if (state.registersuccess){
-            Toast.makeText(context, "Usuario añadido", Toast.LENGTH_SHORT).show()
-        }
-
     }
 }
 
 
 @Composable
-fun nombreUsuario(state: LoginContract.State, viewModel: LoginViewModel?) {
+fun nombreUsuario(state: LoginContract.State, cambiarUser: (String) -> Unit) {
 
 
-    state.username?.let { user ->
+
         TextField(
-            value = user,
+            value = state.username?:"",
+            placeholder = { Text(text = stringResource(id = R.string.usuario)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            onValueChange = {
+                cambiarUser(it)
+                            },
+            singleLine = true,
+            enabled = true,
+            modifier = Modifier.fillMaxWidth()
+
+        )
+
+
+}
+
+@Composable
+fun loginBtn(login: () -> Unit) {
+    Button(onClick = {login() },
+
+        content = { Text(text = stringResource(id = R.string.login)) })
+
+
+}
+
+
+@Composable
+fun registerBtn(regist: () -> Unit) {
+
+    Button(onClick = { regist()},
+
+        content = { Text(text = stringResource(id = R.string.register)) })
+
+
+}
+
+@Composable
+fun passwUsuario(state: LoginContract.State, cambiarPassw: (String) -> Unit) {
+
+
+
+        TextField(
+            value = state.password?:"",
+            placeholder = { Text(text = stringResource(id = R.string.passw)) },
 
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             onValueChange = {
-                viewModel?.event(LoginContract.Event.CambiarUserState(it))
+                cambiarPassw(it)
 
             },
             singleLine = true,
@@ -144,49 +199,7 @@ fun nombreUsuario(state: LoginContract.State, viewModel: LoginViewModel?) {
             modifier = Modifier.fillMaxWidth()
 
         )
-    }
 
-}
-@Composable
-fun loginBtn( viewModel: LoginViewModel?) {
-    Button(onClick = { viewModel?.event(LoginContract.Event.login) },
-
-        content = { Text(text = "login") })
-
-
-}
-
-
-
-@Composable
-fun registerBtn( viewModel: LoginViewModel?) {
-
-    Button(onClick = { viewModel?.event(LoginContract.Event.register) },
-
-        content = { Text(text = "register") })
-
-
-}
-
-@Composable
-fun passwUsuario(state: LoginContract.State, viewModel: LoginViewModel?) {
-
-
-    state.password?.let { pass ->
-        TextField(
-            value = pass,
-
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            onValueChange = {
-                viewModel?.event(LoginContract.Event.CambiarPasswState(it))
-
-            },
-            singleLine = true,
-            enabled = true,
-            modifier = Modifier.fillMaxWidth()
-
-        )
-    }
 }
 
 

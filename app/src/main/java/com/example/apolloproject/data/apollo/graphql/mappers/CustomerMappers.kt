@@ -31,13 +31,7 @@ fun GetCustomerQuery.GetCustomer.toCustomerDetail(): CustomerGraphDetail {
     )
 }
 
-fun AddCustomerMutation.AddCustomer.toCustomerGraph(): CustomerGraph {
-    return CustomerGraph(
-        id=id,
-        firstName = firstName,
-        lastName = lastName
-    )
-}
+
 
 fun UpdateCustomerMutation.UpdateCustomer.toCustomerUpdate():CustomerGraphDetail{
     return CustomerGraphDetail(
@@ -56,9 +50,22 @@ fun CustomerGraphDetail.toCustomerInputConId():CustomerInput{
         firstName = firstName,
         lastName = lastName,
         email = email,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth.toString(),
         phone = phone,
     )
+}
+
+fun AddCustomerMutation.AddCustomer.toCustomerGraph():CustomerGraphDetail{
+    return CustomerGraphDetail(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        dateOfBirth = LocalDate.parse(dateOfBirth),
+        phone = phone,
+    )
+
+
 }
 
 fun CustomerGraphDetail.toCustomerInput(): CustomerInput {
@@ -66,7 +73,7 @@ fun CustomerGraphDetail.toCustomerInput(): CustomerInput {
         firstName = firstName,
         lastName = lastName,
         email = email,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth.toString(),
         phone = phone,
     )
 }

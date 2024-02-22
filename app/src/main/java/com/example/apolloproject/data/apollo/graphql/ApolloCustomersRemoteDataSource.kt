@@ -7,9 +7,11 @@ import com.apolloproject.DeleteOrderMutation
 import com.apolloproject.GetCustomerQuery
 import com.apolloproject.GetCustomersQuery
 import com.apolloproject.UpdateCustomerMutation
+import com.example.apolloproject.common.Constantes
 import com.example.apolloproject.data.apollo.graphql.mappers.toCustomerDetail
 import com.example.apolloproject.data.apollo.graphql.mappers.toCustomerGraph
 import com.example.apolloproject.data.apollo.graphql.mappers.toCustomerInput
+import com.example.apolloproject.data.apollo.graphql.mappers.toCustomerInputConId
 import com.example.apolloproject.data.apollo.graphql.mappers.toCustomerUpdate
 import com.example.apolloproject.domain.model.CustomerGraph
 import com.example.apolloproject.domain.model.CustomerGraphDetail
@@ -19,22 +21,23 @@ import java.lang.Exception
 import javax.inject.Inject
 
 
+
 class ApolloCustomersRemoteDataSource @Inject constructor(
     private val apolloClient: ApolloClient
 ) {
     suspend fun updateCustomer(input: CustomerGraphDetail): NetworkResult<CustomerGraphDetail?> {
         try {
             val response =
-                apolloClient.mutation(UpdateCustomerMutation(input.toCustomerInput())).execute()
+                apolloClient.mutation(UpdateCustomerMutation(input.toCustomerInputConId())).execute()
             if (!response.hasErrors()) {
                 val body = response.data?.updateCustomer?.toCustomerUpdate()
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
               return Error(
-                  response.errors?.first()?.message ?:""
+                  response.errors?.first()?.message ?:Constantes.SPACE
               )
 
             }
@@ -53,10 +56,10 @@ class ApolloCustomersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return Error(
-                    response.errors?.first()?.message ?:""
+                    response.errors?.first()?.message ?: Constantes.SPACE
                 )
 
             }
@@ -75,10 +78,10 @@ class ApolloCustomersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return Error(
-                    response.errors?.first()?.message ?:""
+                    response.errors?.first()?.message ?: Constantes.SPACE
                 )
 
             }
@@ -97,10 +100,10 @@ class ApolloCustomersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return Error(
-                    response.errors?.first()?.message ?:""
+                    response.errors?.first()?.message ?: Constantes.SPACE
                 )
 
             }
@@ -113,7 +116,7 @@ class ApolloCustomersRemoteDataSource @Inject constructor(
 
 
 
-    suspend fun addCustomer(input: CustomerGraphDetail): NetworkResult<CustomerGraph?> {
+    suspend fun addCustomer(input: CustomerGraphDetail): NetworkResult<CustomerGraphDetail?> {
         try {
             val response =
                 apolloClient  .mutation(AddCustomerMutation(input.toCustomerInput())).execute()
@@ -122,10 +125,10 @@ class ApolloCustomersRemoteDataSource @Inject constructor(
                 body?.let {
                     return NetworkResult.Success(it)
                 }
-                error("No data")
+                error(Constantes.NO_DATA)
             } else {
                 return Error(
-                    response.errors?.first()?.message ?:""
+                    response.errors?.first()?.message ?: Constantes.SPACE
                 )
 
             }
